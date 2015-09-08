@@ -29,7 +29,7 @@ function ImpactTimer() {
 }
 util.inherits(ImpactTimer, EventEmitter);
 
-    
+
 ImpactTimer.prototype.getTimeToFirstImpact = function() {
     return ttfi;
 }
@@ -37,9 +37,16 @@ ImpactTimer.prototype.getTimeToFirstImpact = function() {
 ImpactTimer.prototype.setTimeToFirstImpact = function(time) {
     ttfi = parseInt(time);
 }
-    
+
+// shorter alias
+ImpactTimer.prototype.setTTFI = ImpactTimer.prototype.setTimeToFirstImpact;
+
+ImpactTimer.prototype.isRunning = function() {
+    return running;
+}
+
 ImpactTimer.prototype.start = function() {
-    
+
     if (running) {
         console.log('timer already running');
         return false;
@@ -49,6 +56,11 @@ ImpactTimer.prototype.start = function() {
     var self = this;
     self.emit('start');
     return self.runTimer();
+}
+
+ImpactTimer.prototype.stop = function() {
+    running = false;
+    clearTimeout(timeout);
 }
 
 

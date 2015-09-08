@@ -1,18 +1,26 @@
-/**
- * Bootstrap
- * (sails.config.bootstrap)
- *
- * An asynchronous bootstrap function that runs before your Sails app gets lifted.
- * This gives you an opportunity to set up your data model, run jobs, or perform some special logic.
- *
- * For more information on bootstrapping your app, check out:
- * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.bootstrap.html
- */
+var fs  = require('fs');
+var yml = require("yaml-js");
+
 
 module.exports.bootstrap = function(cb) {
 
   // It's very important to trigger this callback method when you are finished
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-  
-  cb();
+
+  var cwd = sails.config.cwd = process.cwd();
+  fs.readFile(cwd + "/api/data/city.yml", function(err, buf){
+      var cities = yml.load(buf.toString());
+      async.each(cities, function(city, next){
+          City.create(city, next);
+      }, function(err) {
+          if (err) throw err;
+
+          fs.readFile(cwd + "/api/data/icbm.yml", function(err, buf){
+              var icbms = yml.load(buf.toString());
+              async.each(icbms, function(icbm, next){
+                  Icbm.create(icbm, next);
+              }, cb);
+          })
+      });
+  })
 };

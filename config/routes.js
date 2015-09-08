@@ -46,6 +46,8 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
- "get /timer" : "TimerController.getTime"
+ "get /timer" : "TimerController.getTime",
+
+ "get /icbms" : "IcbmController.getAll"
 
 };
