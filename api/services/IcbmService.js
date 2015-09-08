@@ -20,7 +20,7 @@ module.exports = {
                     })
                 }, function(err, rslt){
                     if (err) return done(err);
-                    flightInterval = setInterval(advanceInFlight, 1000);
+                    flightInterval = setInterval(advanceInFlight, 250);
                     done(null, rslt);
                 })
             })
@@ -38,7 +38,13 @@ function advanceInFlight(done) {
     Icbm.find({status: 'inflight'}, function(err, icbms){
         if (err) return done(err);
         async.each(icbms, function(icbm, next){
-            Icbm.advance(icbm.id, next);
+            Icbm.advance(icbm.id, function(err, icbm) {
+                if (err) return next(err);
+                var eventType = (icbm.status === 'impacted') ? 'impact' : 'advance';
+                var payload = _.merge(icbm, {eventType: eventType});
+                Icbm.publishUpdate(icbm.id, payload)
+                next(null, icbm);
+            });
         }, done);
     })
 }
