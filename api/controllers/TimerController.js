@@ -14,8 +14,10 @@ module.exports = {
             sails.sockets.join(req.socket, 'ttfi');
         }
 
-        ApiService.response(req, res, null, {
-            timeToFirstImpact: TimerService.getTimeToFirstImpact()
-        });
+        TimerService.getTimeToFirstImpact(function(err, ttfi){
+            ApiService.response(req, res, null, {
+                timeToFirstImpact: ttfi
+            });
+        })
     }
 }

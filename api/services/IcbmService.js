@@ -20,7 +20,8 @@ module.exports = {
                     })
                 }, function(err, rslt){
                     if (err) return done(err);
-                    flightInterval = setInterval(advanceInFlight, 250);
+                    flightInterval = setInterval(advanceInFlight, 1000);
+                    TimerService.start();
                     done(null, rslt);
                 })
             })
