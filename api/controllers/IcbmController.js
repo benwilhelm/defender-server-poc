@@ -10,5 +10,11 @@ module.exports = {
             }
             return ApiService.response(req, res, err, icbms);
         })
+    },
+
+    launchAll: function(req, res) {
+        IcbmService.launchAll(function(err, icbms) {
+            ApiService.response(req, res, err, {status: "launched"})
+        })
     }
 }
